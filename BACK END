@@ -1,0 +1,106 @@
+import sqlite3 
+import numpy
+
+
+class Ingreso: #se define la clase ingreso
+    
+    def __init__(self,u,s):
+        self.usuario=u
+        self.saldo=s
+        
+    def ingresoSemanal(self,abono):
+        conexion=sqlite3.connect("BasedeDatos1.db")
+        cursor=conexion.cursor()
+        saldo=saldo+abono
+        cursor.execute("UPDATE PERSONAS SET saldo={} WHERE usuario={}".format(saldo,usuario))
+        conexion.commit()
+        conexion.close()
+        return saldo
+     
+    def resta(self,gasto):
+        conexion=sqlite3.connect("BasedeDatos1.db")
+        cursor=conexion.cursor()
+        saldo=saldo-gasto
+        cursor.execute("UPDATE PERSONAS SET saldo={} WHERE usuario={}".format(saldo,usuario))
+        conexion.commit()
+        conexion.close()
+        return saldo
+    
+    def resultado(self):
+        return saldo
+
+class usuario:
+    def __init__(self,u,c):
+        self.usuario=u
+        self.contraseña=c
+        
+    def registrar(self,nombre):##aqui se registra un usuario en la pagina con su correo,nombre y contraseña
+        conexion=sqlite3.connect("BasedeDatos1.db")
+        cursor=conexion.cursor()
+        auxiliar=None 
+        cursor.execute("SELECT * FROM PERSONAS WHERE usuario={}".format(usuario))
+        auxiliar=cursor.fetchall()#creamos una varianle auxiliar para validar si el usuario existe o no
+        if auxiliar==None:
+            cursor.execute("INSERT INTO PERSONAS VALUES ({},{},{},0)".format(usuario,contraseña,nombre))
+            conexion.commit()
+            conexion.close()
+            return " usuario creado"
+        else:
+            conexion.close()
+            return "El usuario ya existe" 
+        
+        def Iniciarsesion(self):# metodo iniciar sesion y hace la consulta pidiendo usuario y contraseña
+            conexion=sqlite3.connect("BasedeDatos1.db")
+            cursor=conexion.cursor()
+            auxiliar=None
+            cursor.execute("SELECT * FROM PERSONAS WHERE usuario={} AND contraseña={}".format(usuario,contraseña))
+            auxiliar=cursor.fetchall()
+            if auxiliar==None:#creamos la variable auxiliar para valiar
+                conexion.close()
+                return 0 
+            else:
+                conexion.close()
+
+class Administrador:
+    def __init__(self,u):
+        self.usuario=u
+        
+    def Alta(self):
+        conexion=sqlite3.connect("BasedeDatos1.db")
+        cursor=conexion.cursor()
+        cursor.execute("UPDATE PERSONAS SET key=1 WHERE usuario={}".format(usuario))#cuando se de alta como administrador en la columana KEY aparecera en uno o 1
+        conexion.close()
+        return "Ahora usted es un administrador"
+   
+   def Lista(self):
+        conexion=sqlite3.connect("BasedeDatos1.db")
+        cursor=conexion.cursor()
+        cursor.execute("SELECT * FROM PERSONAS")
+        consulta=cursor.fetchall()
+        conexion.close()
+        return consulta
+    
+    def Eliminar(self):
+        conexion=sqlite3.connect("BasedeDatos1.db")
+        cursor=conexion.cursor()
+        cursor.execute("DELETE  FROM PERSONAS WHERE usuario={}".format(usuario))
+        conexion.close()
+
+        return "El usuario ha sido eliminado"
+                return 1 
+
+import sqlite3 #creacion de la tabla 
+conexion=sqlite3.connect("BasedeDatos1.db")
+cursor=conexion.cursor()
+
+cursor.execute("CREATE TABLE PERSONAS (usuario TEXT,contraseña TEXT,Nombre TEXT,saldo FLOAT,key BINARY )")
+conexion.commit()
+conexion.close()
+
+import sqlite3
+conexion=sqlite3.connect("BasedeDatos1.db")
+cursor=conexion.cursor()
+cursor.execute("SELECT * FROM PERSONAS WHERE usuario='jorge2000' ")#ejemplo para verificar si se guardo en la base de datos al hacer la consulta de un usuario
+auxiliar=cursor.fetchall()
+print(auxiliar)
+conexion.close()
